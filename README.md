@@ -1,15 +1,13 @@
-# clerical-charity-financial-management
-A desktop app for a clerical charity to manage its financial affairs.
+# نرم‌افزار مدیریت امور مالی مذهبی
+مناسب برای دفاتر ائمه جمعه، علمای بلاد و مراجع تقلید
 
-Features:
-* Contact list.
-* Submit loan and its instalments.
-* Submit financial aids given to people.
-* Submit clerical services (e.g. fast and prayer).
-* Financial report for members of contact list.
-* Comprehensive reports of loans, people etc.
-* Export data to Excel
+امکانات:
+* لیست مراجعین
+* ثبت وام‌های قرض‌الحسنه و دیرکردها
+* ثبت کمک‌های مالی
+* ثبت مراجعات صلاة و صوم
+* گزارش مالی مراجعین
+* گزارش کلّی وام‌ها، افراد و غیره
+* خروجی به اکسل
 
-The app is built with [Electron.js](https://github.com/electron/electron) and [vue-cli-plugin-electron-builder](https://github.com/nklayman/vue-cli-plugin-electron-builder).
-
-**The app is currently in Persian**
+این برنامه با استفاده از [Electron.js](https://github.com/electron/electron) و [vue-cli-plugin-electron-builder](https://github.com/nklayman/vue-cli-plugin-electron-builder) نوشته شده است.
