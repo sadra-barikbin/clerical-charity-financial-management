@@ -1,69 +1,61 @@
 import PouchDB from 'pouchdb';
+
 import find from 'pouchdb-find';
-import load from 'pouchdb-load';
 import fs from 'fs';
-import replicationStream from 'pouchdb-replication-stream/dist/pouchdb.replication-stream.min.js';
 
-var archiver, unzipper;
-if(process.env.IS_ELECTRON){
-    archiver=require('archiver');
-    unzipper=require('unzipper');
+let adapter;
+if (process.env.IS_ELECTRON){
+    PouchDB.plugin(require('pouchdb-adapter-node-websql'));
+    adapter = "websql";
+}else{
+    adapter = 'idb';
 }
-
-PouchDB.plugin(load);
-PouchDB.plugin({
-    loadIt: load.load
-});
 
 PouchDB.plugin(find);
 
-PouchDB.plugin(replicationStream.plugin);
-PouchDB.adapter('writableStream', replicationStream.adapters.writableStream);
-
-var loanDb = new PouchDB('loans');
+var loanDb = new PouchDB('loans.db', {adapter});
 loanDb.createIndex({index:{fields:['asker', 'recieveDate'], name:'asker-temporal'}});
 loanDb.createIndex({index:{fields:['fromAccount'], name:'bank-account-based'}});
 loanDb.createIndex({index:{fields:['asker'], name:'asker-based'}});
 loanDb.createIndex({index:{fields:['sureties'], name:'surety-based'}});
 loanDb.createIndex({index:{fields:['number'], name:'numerical'}});
 
-var personDb = new PouchDB('people');
+var personDb = new PouchDB('people.db', {adapter});
 personDb.createIndex({index:{fields:['name','surname'], name:"nominal"}});
 personDb.createIndex({index:{fields:['education.school'], name:'scholastic'}});
 personDb.createIndex({index:{fields:['tags'], name:'tag-based'}});
 personDb.createIndex({index:{fields:['nationalId'], name:'identity-based'}})
 
-var serviceDb = new PouchDB('services');
+var serviceDb = new PouchDB('services.db', {adapter});
 serviceDb.createIndex({index:{fields:['performer'], name:'performer'}});
 serviceDb.createIndex({index:{fields:['performer', 'recieveDate'], 
                                 name:'performer-temporal'}});
 
-var helpDb = new PouchDB('helps');
+var helpDb = new PouchDB('helps.db', {adapter});
 helpDb.createIndex({index:{fields:['asker'], name:'personal'}});
 helpDb.createIndex({index:{fields:['asker', 'recieveDate'],
                              name:'personal-temporal'}});
 helpDb.createIndex({index:{fields:['fromAccount', 'asker'],
                              name:'financial-personal'}});
 
-var bankAccountDb = new PouchDB('bank-accounts');
+var bankAccountDb = new PouchDB('bank-accounts.db', {adapter});
 
-var schoolDb = new PouchDB('schools');
+var schoolDb = new PouchDB('schools.db', {adapter});
 
-var tagDb = new PouchDB('tags');
+var tagDb = new PouchDB('tags.db', {adapter});
 
 function Erase(){
     return Promise.all([loanDb.destroy(), personDb.destroy(), serviceDb.destroy(),
-        helpDb.destroy()]);
+        helpDb.destroy(), bankAccountDb.destroy(), schoolDb.destroy(), tagDb.destroy()]);
 }
 
 var DBs = {loanDb, personDb, serviceDb, helpDb, schoolDb, bankAccountDb, tagDb};
 var Restore, Backup;
 if(process.env.IS_ELECTRON){
     Restore = async function(path){
-        const directory = await unzipper.Open.file(path);
+        const directory = fs.opendirSync(path);
         for(let file of directory.files){
-            await DBs[file.path.split('.')[0]].loadIt((await file.buffer())
-                                                        .toString());
+            DBs[file.path.split('.')[0]] = new PouchDB(file.path, {adapter})
         }
         return true;
     }
@@ -75,6 +67,7 @@ if(process.env.IS_ELECTRON){
                                  db === 'tag');
         for(let db of dbNames){
             let file = fs.createWriteStream(`${db}Db.dump`);
+            
             dbs.push(DBs[`${db}Db`].dump(file));
         }
         let archive = archiver('zip');
