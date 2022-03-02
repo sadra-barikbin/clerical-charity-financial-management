@@ -129,14 +129,20 @@ export default {
         deleteStuff(index, sectionIdx, force){
             if(sectionIdx === 'data'){
                 if(!force){
-                    this.confirmDialogMessage = "اطلاعات تمامی افراد,وام‌ها,کمک‌ها و نماز-روزه‌ها پاک خواهد شد.";
+                    this.confirmDialogMessage = "اطلاعات تمامی افراد،وام‌ها،کمک‌ها و نماز-روزه‌ها پاک خواهد شد.";
                     this.confirmDialog = true;
                     this.confirmDialogSectionIdx = 'data';
                     return;
                 }else{
-                    Erase().then(r=>{
-                        console.log(r);
-                        this.resetConfirmDialog();    
+                    Erase().then(()=>{
+                        this.resetConfirmDialog();
+                        this.getStat().then(() => {
+                            this.getData().then(() => {
+                                this.showMessageBox({type:'info', buttons:['باشه'],
+                                    title:'حذف اطلاعات',
+                                    message:'با موفقیت انجام شد!'});
+                            })
+                        })
                     })
                     return;
                 }
@@ -226,8 +232,8 @@ export default {
         },
         doRestore(){
             this.restoring.dialog = true;
-            this.showOpenDialog({title:'فایل پشتیبان را انتخاب کنید!',
-                filters:[{name:'dump file', extensions:['dump']}]},
+            this.showOpenDialog({title:'مسیر  ذخیره فایل‌های پشتیبان را انتخاب کنید!',
+                properties:['openDirectory']},
                 ps => {
                     this.restoring.dialog = false;
                     if(!ps) return;

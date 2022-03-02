@@ -8,7 +8,7 @@ module.exports = {
             }
         },
         nodeIntegration: true,
-        externals:['archiver']
+        externals:['websql']
       }
     },
   }

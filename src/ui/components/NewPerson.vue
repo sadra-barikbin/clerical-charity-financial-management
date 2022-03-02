@@ -16,7 +16,7 @@
                     </v-avatar>
                 </v-col>
             </v-layout>
-            <v-text-field dense v-model="fathername" label="نام پدر"></v-text-field>
+            <v-text-field class="pt-1" dense v-model="fathername" label="نام پدر"></v-text-field>
             <persian-date-field :max="todayString()" v-model="birthDate" label="تاریخ تولد"></persian-date-field>
             <v-layout row wrap align-center>
                 <v-col cols="12" sm="1">

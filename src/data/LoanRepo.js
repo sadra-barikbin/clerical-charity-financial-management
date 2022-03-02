@@ -114,7 +114,7 @@ class LoanRepo{
     Count(){
         return loanDb.info().then(r=>{
             return loanDb.getIndexes().then(res=>{
-                return r.doc_count-res.indexes.length+1;
+                return r.doc_count-res.indexes.length + 1;
             });
         });
     }
