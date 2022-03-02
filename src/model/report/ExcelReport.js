@@ -5,7 +5,10 @@ const Help = require('../help/Help');
 const CashHelp = require('../help/CashHelp');
 const Service = require('../service/Service');
 const Receipt = require('../Receipt');
-const fs = require('fs');
+
+let remote = require('electron').remote;
+let fs = remote.require('fs');
+
 module.exports = class ExcelReport{
     prepareForExcel(item){
         let res = Object.assign({},item);
