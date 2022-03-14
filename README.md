@@ -1,6 +1,10 @@
 # نرم‌افزار مدیریت امور مالی مذهبی
 مناسب برای دفاتر ائمه جمعه، علمای بلاد و مراجع تقلید
 
+---
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/tp5klp64yeuw6heh/branch/main?svg=true)](https://ci.appveyor.com/project/sadra-barikbin/clerical-charity-financial-management/branch/main)
+
+
 امکانات:
 * لیست مراجعین
 * ثبت وام‌های قرض‌الحسنه و دیرکردها

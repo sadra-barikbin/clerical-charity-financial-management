@@ -1,16 +1,22 @@
 {
   "name": "daftar",
   "version": "0.1.2",
+  "description": "A Desktop app for clerical charities to manage their financial affairs.",
   "private": true,
-  "author": "Sadra Barikbin",
+  "author": "Sadra Barikbin <sadraqazvin1@yahoo.com> (http://ce.sharif.edu/~barikbin/)",
   "email": "sadraqazvin1@yahoo.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sadra-barikbin/clerical-charity-financial-management"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build:electron": "vue-cli-service build:electron",
     "electron:build": "vue-cli-service electron:build",
-    "electron:build:win32": "vue-cli-service electron:build --win --ia32",
+    "electron:build:x86": "vue-cli-service electron:build --ia32",
+    "electron:build:x64": "vue-cli-service electron:build --x64",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
@@ -40,7 +46,7 @@
     "@vue/cli-service": "^4.5.13",
     "babel-eslint": "^10.0.3",
     "css-loader": "^3.4.2",
-    "electron": "^5.0.13",
+    "electron": "^6.1.12",
     "eslint": "^6.8",
     "eslint-plugin-vue": "^6.1.2",
     "material-design-icons-iconfont": "^6.1.0",
@@ -51,6 +57,14 @@
     "vue-cli-plugin-electron-builder": "^2.0.0-rc.2",
     "vue-cli-plugin-vuetify": "~2.0.5",
     "vue-template-compiler": "^2.6.11"
+  },
+  "overrides": {
+    "websql": {
+      "sqlite3": {
+        ".": "5.0.0",
+        "node-addon-api": "4.3.0"
+      }
+    }
   },
   "eslintConfig": {
     "root": true,
@@ -77,5 +91,6 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "engines": { "npm": ">=8.3.0" }
 }

@@ -91,12 +91,6 @@ dist
 # vuepress build output
 .vuepress/dist
 
-# Serverless directories
-.serverless/
-
-# FuseBox cache
-.fusebox/
-
 # DynamoDB Local files
 .dynamodb/
 

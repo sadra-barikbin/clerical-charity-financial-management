@@ -1,0 +1,63 @@
+image:
+  - Ubuntu
+  - macOS
+  - Visual Studio 2015
+environment:
+  APP_VERSION: 0.1.2
+platform:
+  - x86
+  - x64
+stack: node 14.19.0 $env:platform
+install:
+  - ps: |
+      if ($isWindows){
+        Update-NodeJsInstallation 14.19.0 $env:platform
+      }
+  - npm install
+build_script:
+  - cmd: npm run electron:build:%PLATFORM%
+  - sh: npm run electron:build:$PLATFORM
+  - ps: >-
+      if ($env:APPVEYOR_BUILD_WORKER_IMAGE -eq 'Ubuntu'){
+        $env:target = 'deb'
+      }
+      elseif ($env:APPVEYOR_BUILD_WORKER_IMAGE -eq 'macOS'){
+        $env:target = 'dmg'
+      }
+      else{
+        $env:target = 'exe'
+      }
+  - ps: >-
+      if ($env:PLATFORM -eq 'x86'){
+        $env:arch = 'ia32'
+      }
+      else{
+        if ($env:APPVEYOR_BUILD_WORKER_IMAGE -eq 'Ubuntu'){
+          $env:arch = 'amd64'
+        }
+        else{
+          $env:arch = 'x64'
+        }
+      }
+  - cd dist_electron
+  - sh: appveyor PushArtifact "daftar_${APP_VERSION}_$arch.$target"
+  - cmd: appveyor PushArtifact "daftar_%APP_VERSION%_%arch%.%target%"
+matrix:
+  fast_finish: true
+  exclude:
+    - platform: x86
+      image: Ubuntu
+    - platform: x86
+      image: macOS
+deploy:
+  - provider: GitHub
+    tag: v$(APP_VERSION)
+    draft: true
+    description: First release
+    auth_token:
+      secure: ZSynQelZ2ldL9hloZFOSCSIw43AVEfvyhBsMDCQ1WuyQ/kn6Km+lZ28kKramXfOO
+    on:
+      branch: main
+      APPVEYOR_REPO_TAG: true
+cache:
+  - node_modules
