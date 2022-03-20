@@ -85,7 +85,7 @@
       <v-row v-if="reportTopic" justify-end>
         <v-col style="text-align:left">
           <v-btn @click="exportExcel" color="green lighten-1" 
-            rounded outlined :loading="exporting.running" :disabled="exporting.dialog">
+            rounded outlined :loading="exporting.running" :disabled="exporting.dialog || !tableItems.length">
             خروجی به اکسل
             <v-icon>mdi-file-excel-outline</v-icon>
           </v-btn>
@@ -122,7 +122,7 @@ export default {
         endDateMenu:false,
         endDate:new Date().toISOString().substr(0, 10),
         tables:{all:AllReceiptsTable,service:ServicesTable,loan:LoansTable,help:HelpsTable},
-        tableItems:null,
+        tableItems: [],
         serviceTypes:[{text:'همه',value:'all'},{text:'نماز',value:'prayer'},{text:'روزه',value:'fasting'}],
         serviceType:'all',
         exporting:{
@@ -163,10 +163,10 @@ export default {
       exportExcel(){
         this.exporting.dialog=true;
         this.showOpenDialog({title:'مسیر ذخیره گزارش را انتخاب کنید!',properties:['openDirectory']},ps=>{
-            if(!ps)return;
-            this.exporting.running=true;
-            this.exporting.dialog=false;
-            let report=new ExcelReport(this.tableItems);
+            if(!ps.length)return;
+            this.exporting.running = true;
+            this.exporting.dialog = false;
+            let report = new ExcelReport(this.tableItems);
             report.save(`${ps[0]}/report.xlsx`).then(()=>{
                 this.exporting.running=false;
                 this.showMessageBox({type:'info',buttons:['باشه'],title:'گزارش‌گیری',message:'با موفقیت انجام شد!'});
